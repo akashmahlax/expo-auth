@@ -1,41 +1,35 @@
 import { FontAwesome } from '@expo/vector-icons';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BackHandler,
-  Platform,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Dimensions
+    ActivityIndicator,
+    Alert,
+    Animated,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import {
-  MediaStream,
-  RTCPeerConnection,
-  RTCView
+    MediaStream,
+    RTCPeerConnection,
+    RTCView
 } from 'react-native-webrtc';
 
 // Import NetInfo safely using our mock
 // Using our improved mock implementation with proper TypeScript types
 import NetInfo from '@/utils/mock-netinfo';
-import type { NetInfoState } from '@/utils/mock-netinfo.d.ts';
 
 import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { auth } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {
-  createCall,
-  getCallHistory,
-  getUserMedia,
-  joinCall as joinCallHelper,
-  switchCamera as switchCameraHelper,
-  toggleAudio as toggleAudioHelper,
-  toggleVideo as toggleVideoHelper
+    createCall,
+    getUserMedia,
+    joinCall as joinCallHelper,
+    switchCamera as switchCameraHelper,
+    toggleAudio as toggleAudioHelper,
+    toggleVideo as toggleVideoHelper
 } from '@/utils/webrtc-helper';
 
 interface VideoCallImplementationProps {

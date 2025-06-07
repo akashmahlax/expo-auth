@@ -13,9 +13,9 @@ import {
   View
 } from 'react-native';
 
+import SafeVideoCall from '@/components/SafeVideoCall';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import SafeVideoCall from '@/components/SafeVideoCall';
 import { Colors } from '@/constants/Colors';
 import { auth } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';

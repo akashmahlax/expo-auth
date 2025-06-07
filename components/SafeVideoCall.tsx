@@ -1,4 +1,3 @@
-import { FontAwesome } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
@@ -7,8 +6,20 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+interface SafeVideoCallProps {
+  embedded?: boolean;
+  initialCallId?: string | null;
+  onCallStarted?: (callId: string) => void;
+  onCallEnded?: () => void;
+}
+
 // Create a component that safely loads WebRTC functionality
-export default function SafeVideoCall({ embedded = false }) {
+export default function SafeVideoCall({ 
+  embedded = false,
+  initialCallId = null,
+  onCallStarted,
+  onCallEnded
+}: SafeVideoCallProps) {
   const colorScheme = useColorScheme() ?? 'light';
   const currentColors = Colors[colorScheme];
   const tintColor = currentColors.tint;
@@ -70,10 +81,16 @@ export default function SafeVideoCall({ embedded = false }) {
       </ThemedView>
     );
   }
-  
-  // When WebRTC is loaded, import and render the actual VideoCall component
+    // When WebRTC is loaded, import and render the actual VideoCall component
   const VideoCallImplementation = require('../components/VideoCallImplementation').default;
-  return <VideoCallImplementation />;
+  return (
+    <VideoCallImplementation 
+      embedded={embedded}
+      initialCallId={initialCallId}
+      onCallStarted={onCallStarted}
+      onCallEnded={onCallEnded}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

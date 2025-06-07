@@ -42,7 +42,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="videocallnew"
+        name="videocall"
         options={{
           title: 'Video Call',
           tabBarIcon: ({ color }) => <FontAwesome size={24} name="video-camera" color={color} />,

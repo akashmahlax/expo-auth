@@ -47,8 +47,8 @@ export default function EnhancedVideoCallScreen() {
         if (sessionDoc.exists()) {
           const sessionData = sessionDoc.data() as Session;
           setSession({
-            id: sessionDoc.id,
-            ...sessionData
+            ...sessionData,
+            id: sessionDoc.id
           });
           
           // If session already has a call ID, use it
@@ -141,7 +141,11 @@ export default function EnhancedVideoCallScreen() {
         
         {session && (
           <ThemedText style={styles.sessionTime}>
-            {new Date(session.startTime).toLocaleDateString()}
+            {session.startTime instanceof Date
+              ? session.startTime.toLocaleDateString()
+              : 'toDate' in session.startTime
+                ? session.startTime.toDate().toLocaleDateString()
+                : 'Invalid Date'}
           </ThemedText>
         )}
       </View>

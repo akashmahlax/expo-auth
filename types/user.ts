@@ -1,5 +1,7 @@
 // User and counselor types for the mental wellness app
 
+import { FieldValue, Timestamp } from 'firebase/firestore';
+
 export type UserRole = 'user' | 'counsellor' | 'admin';
 
 export type VerificationStatus = 'pending' | 'verified' | 'rejected';
@@ -39,8 +41,6 @@ export interface CounsellorProfile extends UserProfile {
   verificationComments?: string | null;
 }
 
-import { FieldValue, Timestamp } from 'firebase/firestore';
-
 export interface Certificate {
   id: string;
   counsellorId: string;
@@ -58,15 +58,15 @@ export interface Session {
   id: string;
   userId: string;
   counsellorId: string;
-  startTime: Date | string;
-  endTime: Date | string;
+  startTime: Date | Timestamp | FieldValue;
+  endTime: Date | Timestamp | FieldValue;
   status: 'scheduled' | 'completed' | 'cancelled' | 'in-progress';
   callId?: string;
   notes?: string;
   rating?: number;
   feedback?: string;
-  createdAt: Date | string;
-  updatedAt?: Date | string;
+  createdAt: Date | Timestamp | FieldValue;
+  updatedAt?: Date | Timestamp | FieldValue;
 }
 
 export interface Message {
@@ -74,7 +74,7 @@ export interface Message {
   senderId: string;
   receiverId: string;
   content: string;
-  timestamp: Date | string;
+  timestamp: Date | Timestamp | FieldValue;
   read: boolean;
   sessionId?: string;
 }

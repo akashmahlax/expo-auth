@@ -163,11 +163,11 @@ export default function CounsellorDashboardScreen() {
                   <View className="flex-row justify-between items-center p-4 mb-3 rounded-xl bg-white dark:bg-gray-800 shadow-sm">
                     <View className="flex-1">
                       <Text className="font-bold mb-1 text-gray-800 dark:text-gray-100">
-                        {new Date(item.startTime).toLocaleDateString()}
+                        {(item.startTime instanceof Date ? item.startTime : ('toDate' in item.startTime ? item.startTime.toDate() : new Date())).toLocaleDateString()}
                       </Text>
                       <Text className="text-gray-600 dark:text-gray-300">
-                        {new Date(item.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
-                        {new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {(('toDate' in item.startTime ? item.startTime.toDate() : item.startTime) as Date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+                        {(('toDate' in item.endTime ? item.endTime.toDate() : item.endTime) as Date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </Text>
                     </View>
                     <TouchableOpacity 
@@ -215,7 +215,7 @@ export default function CounsellorDashboardScreen() {
               Quick Actions
             </Text>
             <View className="flex-row flex-wrap justify-between">
-              <Link href="/(tabs)/profile" asChild>
+              <Link href="/profile" asChild>
                 <TouchableOpacity className="w-[48%] items-center py-4 mb-3">
                   <View className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 justify-center items-center mb-2">
                     <MaterialIcons name="account-circle" size={24} color="#2196F3" />

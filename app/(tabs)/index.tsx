@@ -1,19 +1,21 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
-import { 
-  ActivityIndicator, 
-  Alert, 
-  Animated, 
-  Image, 
-  KeyboardAvoidingView, 
-  Platform, 
-  StyleSheet, 
-  TextInput, 
-  TouchableOpacity 
+import {
+  ActivityIndicator,
+  Alert,
+  Animated,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import SafeVideoCall from '@/components/SafeVideoCall';
 import { Colors } from '@/constants/Colors';
 import { auth } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -115,9 +117,8 @@ export default function HomeScreen() {
     });
     return () => unsubscribe();
   }, []);
-
   if (user) {
-    // User is signed in, show profile screen
+    // User is signed in, show profile screen with video call
     return (
       <ThemedView style={styles.container}>
         <Image 
@@ -130,14 +131,22 @@ export default function HomeScreen() {
         <ThemedText style={styles.userInfo}>Email: {user.email}</ThemedText>
         <ThemedText style={styles.userInfo}>User ID: {user.uid}</ThemedText>
         
-        <TouchableOpacity 
-          style={[styles.button, { backgroundColor: tintColor }]} 
-          onPress={handleSignOut}
-        >
-          <ThemedText style={styles.buttonText} lightColor={buttonTextColorLight} darkColor={buttonTextColorDark}> 
-            Sign Out
-          </ThemedText>
-        </TouchableOpacity>
+        {/* Video Call Component */}
+        <View style={styles.videoCallContainer}>
+          <ThemedText type="subtitle" style={styles.videoCallTitle}>Video Calling</ThemedText>
+          <SafeVideoCall embedded={true} />
+        </View>
+        
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity 
+            style={[styles.button, { backgroundColor: tintColor }]} 
+            onPress={handleSignOut}
+          >
+            <ThemedText style={styles.buttonText} lightColor={buttonTextColorLight} darkColor={buttonTextColorDark}> 
+              Sign Out
+            </ThemedText>
+          </TouchableOpacity>
+        </View>
       </ThemedView>
     );
   }
@@ -261,6 +270,10 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 15,
   },
+  buttonContainer: {
+    width: '100%',
+    marginTop: 20,
+  },
   button: {
     width: '100%',
     height: 50,
@@ -282,5 +295,18 @@ const styles = StyleSheet.create({
   },
   errorText: {
     textAlign: 'center',
+  },
+  videoCallContainer: {
+    width: '100%',
+    borderRadius: 12,
+    marginTop: 20,
+    height: 350,
+    overflow: 'hidden',
+  },
+  videoCallTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginTop: 10,
   },
 });

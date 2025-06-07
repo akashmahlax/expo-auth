@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera for video calls.",
+        "NSMicrophoneUsageDescription": "This app uses the microphone for video calls."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -17,7 +21,15 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.akashmahlax.expoauth"
+      "package": "com.akashmahlax.expoauth",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.CHANGE_NETWORK_STATE",
+        "android.permission.INTERNET"
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -35,6 +47,14 @@
           "backgroundColor": "#ffffff"
         }
       ]
+    ],
+    "permissions": [
+      "android.permission.CAMERA",
+      "android.permission.RECORD_AUDIO",
+      "android.permission.MODIFY_AUDIO_SETTINGS",
+      "android.permission.ACCESS_NETWORK_STATE",
+      "android.permission.CHANGE_NETWORK_STATE",
+      "android.permission.INTERNET"
     ],
     "experiments": {
       "typedRoutes": true

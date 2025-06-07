@@ -1,6 +1,10 @@
-# Welcome to your Expo app 👋
+# Expo Auth App with WebRTC Video Calling
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+This is a React Native application built with Expo that features:
+
+1. Firebase email/password authentication
+2. WebRTC-based video calling functionality 
+3. Light and dark mode support
 
 ## Get started
 
@@ -16,31 +20,68 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Authentication
+- Firebase email/password authentication
+- User sign-up and login
+- Session persistence using AsyncStorage
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+### Video Calling
+- Peer-to-peer video calls using WebRTC
+- Firestore-based signaling for WebRTC connection establishment
+- Call controls:
+  - Mute/unmute audio
+  - Enable/disable video
+  - Switch camera (front/back)
+  - End call
+- Share call ID to invite others to join
+- Adaptive UI for both light and dark modes
 
-## Get a fresh project
+## Technical Implementation
 
-When you're ready, run:
+### WebRTC Architecture
+The video calling feature uses a peer-to-peer WebRTC connection architecture with Firebase Firestore as the signaling server. Here's how it works:
 
-```bash
-npm run reset-project
-```
+1. **Call Creation**:
+   - User creates a call which generates a unique call ID
+   - An SDP offer is created and stored in Firestore
+   - ICE candidates are collected and stored in Firestore
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+2. **Call Joining**:
+   - Other user joins using the call ID
+   - Retrieves the SDP offer from Firestore
+   - Creates an SDP answer and stores it back in Firestore
+   - ICE candidates are exchanged through Firestore
 
-## Learn more
+3. **Media Handling**:
+   - Local and remote video streams are managed using RTCView
+   - Camera and microphone access permissions are requested
+   - Video/audio can be toggled on/off during the call
 
-To learn more about developing your project with Expo, look at the following resources:
+### Firebase Resources
+- **Authentication**: Email/password authentication
+- **Firestore Collections**:
+  - `calls`: Stores call information, offers, and answers
+  - `calls/{callId}/callerCandidates`: Stores ICE candidates from the caller
+  - `calls/{callId}/calleeCandidates`: Stores ICE candidates from the callee
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Using the App
+
+1. **Authentication**:
+   - Sign up with email and password
+   - Log in with existing credentials
+   
+2. **Video Calling**:
+   - Navigate to the Video Call tab
+   - Tap "Start New Call" to create a call
+   - Share the generated call ID with another user
+   - Other user enters ID and taps "Join"
+   - Use on-screen controls for mute, camera toggle, etc.
+
+## Development
+
+This project uses [Expo Router](https://docs.expo.dev/router/introduction) for file-based routing and navigation.
 
 ## Join the community
 

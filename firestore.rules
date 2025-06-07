@@ -1,0 +1,27 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to read and write to the calls collection
+    match /calls/{callId} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if request.auth != null;
+      
+      // Allow access to caller candidates subcollection
+      match /callerCandidates/{candidateId} {
+        allow create: if request.auth != null;
+        allow read: if request.auth != null;
+      }
+      
+      // Allow access to callee candidates subcollection
+      match /calleeCandidates/{candidateId} {
+        allow create: if request.auth != null;
+        allow read: if request.auth != null;
+      }
+    }
+    
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

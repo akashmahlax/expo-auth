@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { AuthProvider } from '@/contexts/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import './global.css';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -24,10 +25,9 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
           <Stack.Screen name="auth" options={{ headerShown: false }} />
-          <Stack.Screen name="counsellor" options={{ headerTitle: 'Counsellor' }} />
-          <Stack.Screen name="chat" options={{ headerTitle: 'Messages' }} />
-          <Stack.Screen name="session" options={{ headerTitle: 'Sessions' }} />
-          <Stack.Screen name="profile" options={{ headerTitle: 'Profile' }} />
+          <Stack.Screen name="counsellor/availability" options={{ headerTitle: 'Set Availability' }} />
+          <Stack.Screen name="counsellor/verification" options={{ headerTitle: 'Verification' }} />
+          <Stack.Screen name="chat/conversation" options={{ headerTitle: 'Chat' }} />
         </Stack>
         <StatusBar style="auto" />
       </AuthProvider>

@@ -1,7 +1,7 @@
 import { FontAwesome } from '@expo/vector-icons';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, User } from 'firebase/auth';
-import { collection, getDocs, query, where } from 'firebase/firestore';
 import { router } from 'expo-router';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -12,17 +12,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  Text,
   TextInput,
   TouchableOpacity,
-  View,
-  Text
+  View
 } from 'react-native';
 
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
-import { auth, db } from '@/firebaseConfig';
 import { useAuth } from '@/contexts/AuthContext';
+import { auth, db } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { CounsellorProfile, Session } from '@/types/user';
 
@@ -145,7 +143,7 @@ export default function HomeScreen() {
       
       const snapshot = await getDocs(q);
       const counsellors = snapshot.docs
-        .map(doc => ({ id: doc.id, ...(doc.data() as unknown as CounsellorProfile) }))
+        .map(doc => ({ ...doc.data(), id: doc.id } as CounsellorProfile & { id: string }))
         .slice(0, 5); // Limit to 5 counsellors for the recommendation section
       
       setRecommendedCounsellors(counsellors);
@@ -155,8 +153,7 @@ export default function HomeScreen() {
       setLoadingCounsellors(false);
     }
   };
-  
-  // Fetch upcoming sessions for the user
+    // Fetch upcoming sessions for the user
   const fetchUpcomingSessions = async () => {
     if (!user) return;
     
@@ -165,17 +162,23 @@ export default function HomeScreen() {
       const sessionsRef = collection(db, 'sessions');
       const today = new Date();
       
-      // Query for upcoming sessions for this user
+      // Query for sessions for this user (simplified to avoid index issues)
       const q = query(
         sessionsRef,
         where('userId', '==', user.uid),
-        where('status', '==', 'confirmed'),
         where('startTime', '>=', today)
       );
       
       const snapshot = await getDocs(q);
-      const sessions = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }) as Session)
+      const sessions = await Promise.all(snapshot.docs.map(async doc => {
+        const sessionData = { id: doc.id, ...doc.data() } as Session;
+        // Fetch counsellor data
+        const counsellorDoc = await getDocs(query(collection(db, 'profiles'), where('id', '==', sessionData.counsellorId)));
+        const counsellor = counsellorDoc.docs[0]?.data() as CounsellorProfile;
+        return { ...sessionData, counsellor };
+      }));
+      const filteredSessions = sessions
+        .filter(session => session.status === 'scheduled' || session.status === 'in-progress') // Filter on client side
         .sort((a, b) => {
           // Convert timestamps to Date objects for comparison
           const dateA = a.startTime instanceof Date ? a.startTime : new Date(a.startTime);
@@ -189,7 +192,7 @@ export default function HomeScreen() {
     } finally {
       setLoadingSessions(false);
     }
-  };  
+  };
   
   if (user) {
     // User is signed in, show home screen with counselor recommendations
@@ -258,8 +261,8 @@ export default function HomeScreen() {
                   {counsellor.displayName}
                 </Text>
                 <Text className="text-xs text-gray-500 dark:text-gray-400">
-                  {counsellor.specialties?.length > 0 
-                    ? `Specializes in ${counsellor.specialties[0]}`
+                  {(counsellor.specialties ?? []).length > 0 
+                    ? `Specializes in ${counsellor.specialties?.[0]}`
                     : 'Counsellor'}
                 </Text>
               </TouchableOpacity>
@@ -287,9 +290,9 @@ export default function HomeScreen() {
               // Convert timestamp to Date
               const sessionDate = item.startTime instanceof Date
                 ? item.startTime
-                : 'toDate' in item.startTime
-                  ? item.startTime.toDate()
-                  : new Date();
+                : typeof item.startTime === 'object' && item.startTime !== null && 'seconds' in item.startTime && typeof (item.startTime as any).seconds === 'number'
+                  ? new Date((item.startTime as { seconds: number }).seconds * 1000)
+                  : new Date(item.startTime);
               
               // Format date and time
               const formattedDate = sessionDate.toLocaleDateString();
@@ -304,25 +307,25 @@ export default function HomeScreen() {
                   onPress={() => router.push(`/sessions?id=${item.id}`)}
                 >
                   {item.counsellor?.photoURL ? (
-                    <Image 
-                      source={{ uri: item.counsellor.photoURL }} 
-                      className="w-10 h-10 rounded-full mr-3"
-                      resizeMode="cover"
-                    />
+                  <Image 
+                    source={{ uri: item.counsellor.photoURL }} 
+                    className="w-10 h-10 rounded-full mr-3"
+                    resizeMode="cover"
+                  />
                   ) : (
-                    <View className="w-10 h-10 rounded-full mr-3 justify-center items-center bg-primary-600">
-                      <Text className="text-base font-bold text-white dark:text-black">
-                        {item.counsellor?.displayName?.charAt(0)?.toUpperCase() || 'C'}
-                      </Text>
-                    </View>
+                  <View className="w-10 h-10 rounded-full mr-3 justify-center items-center bg-primary-600">
+                    <Text className="text-base font-bold text-white dark:text-black">
+                    {item.counsellor?.displayName?.charAt(0)?.toUpperCase() || 'C'}
+                    </Text>
+                  </View>
                   )}
                   <View className="flex-1 justify-center">
-                    <Text className="text-[15px] font-semibold mb-1 text-gray-800 dark:text-gray-100">
-                      Session with {item.counsellor?.displayName || 'Counsellor'}
-                    </Text>
-                    <Text className="text-[13px] text-gray-500 dark:text-gray-400">
-                      {formattedDate}, {formattedTime}
-                    </Text>
+                  <Text className="text-[15px] font-semibold mb-1 text-gray-800 dark:text-gray-100">
+                    Session with {item.counsellorId?.displayName || 'Counsellor'}
+                  </Text>
+                  <Text className="text-[13px] text-gray-500 dark:text-gray-400">
+                    {formattedDate}, {formattedTime}
+                  </Text>
                   </View>
                 </TouchableOpacity>
               );

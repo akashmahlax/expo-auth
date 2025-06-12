@@ -17,6 +17,7 @@ export interface UserProfile {
 }
 
 export interface CounsellorProfile extends UserProfile {
+  id: Key | null | undefined;
   type: 'counsellor';
   verificationStatus: VerificationStatus;
   specialties?: string[];

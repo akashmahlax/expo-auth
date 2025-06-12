@@ -1,15 +1,17 @@
-const { getDefaultConfig } = require('expo/metro-config');
+const { getDefaultConfig } = require("expo/metro-config");
+const { withNativeWind } = require('nativewind/metro');
 
-const defaultConfig = getDefaultConfig(__dirname);
+// Get the default Expo config
+const config = getDefaultConfig(__dirname);
 
-// Add support for WebRTC
-defaultConfig.resolver.sourceExts.push('cjs');
-defaultConfig.resolver.unstable_enablePackageExports = false;
+// Add support for .cjs files
+config.resolver.assetExts.push("cjs");
 
-// Add support for non-standard WebRTC dependencies
-defaultConfig.resolver.extraNodeModules = {
-  ...defaultConfig.resolver.extraNodeModules,
-  'react-native-webrtc': require.resolve('react-native-webrtc'),
-};
+// Disable package exports resolution
+config.resolver.unstable_enablePackageExports = false;
 
-module.exports = defaultConfig;
+// Apply NativeWind plugin with global.css input
+module.exports = withNativeWind(config, {
+  input: './global.css',
+  projectRoot: __dirname,
+});

@@ -1,7 +1,8 @@
 import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
-import React, { useEffect, useState } from 'react';
-import { Alert, FlatList, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { StreamChat, Channel as StreamChannel } from 'stream-chat';
 import { Channel, ChannelList, Chat, MessageInput, MessageList } from 'stream-chat-expo';
 
 import { Colors } from '@/constants/Colors';
@@ -16,9 +17,9 @@ export default function MessagesScreen() {
   const colorScheme = useColorScheme() ?? 'light';
   const currentColors = Colors[colorScheme];
   
-  const [currentChannel, setCurrentChannel] = useState(null);
+  const [currentChannel, setCurrentChannel] = useState<StreamChannel | null>(null);
   const [loading, setLoading] = useState(true);
-  const [chatClient, setChatClient] = useState(null);
+  const [chatClient, setChatClient] = useState<StreamChat | null>(null);
 
   useEffect(() => {
     initializeChat();

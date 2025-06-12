@@ -64,13 +64,15 @@ export default function HomeScreen() {
     await loadCounselors();
     setRefreshing(false);
   };
-
   const filterCounselors = () => {
     if (!searchQuery.trim()) {
       setFilteredCounselors(counselors);
       return;
-    }    const filtered = counselors.filter(counselor =>
-      (counselor.name || counselor.displayName || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+    }
+
+    const filtered = counselors.filter(counselor =>
+      (counselor.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       counselor.displayName?.toLowerCase().includes(searchQuery.toLowerCase())) ||
       counselor.specializations?.some(spec =>
         spec.toLowerCase().includes(searchQuery.toLowerCase())
       )

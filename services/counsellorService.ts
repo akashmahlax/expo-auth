@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, updateDoc, query, collection, where, getDocs, addDoc, Timestamp, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, query, Timestamp, updateDoc, where } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 
 import { auth, db, storage } from '@/firebaseConfig';
@@ -29,13 +29,12 @@ export const createCertificate = async (
   fileType: string
 ): Promise<Certificate> => {
   if (!auth.currentUser) throw new Error('No authenticated user');
-  
-  const certificateData: Omit<Certificate, 'id'> = {
+    const certificateData: Omit<Certificate, 'id'> = {
     counsellorId,
     name,
     fileURL,
     fileType,
-    uploadedAt: serverTimestamp(),
+    uploadedAt: new Date(),
     status: 'pending',
   };
   
@@ -107,4 +106,66 @@ export const registerAsCounsellor = async (counsellorData: Partial<CounsellorPro
     ...counsellorData,
     updatedAt: Timestamp.now()
   });
+};
+
+// Get all counsellors (for counselor discovery)
+export const getAllCounsellors = async (): Promise<CounsellorProfile[]> => {
+  try {
+    const counsellorsQuery = query(
+      collection(db, 'users'), 
+      where('type', '==', 'counsellor')
+    );
+    
+    const querySnapshot = await getDocs(counsellorsQuery);
+    return querySnapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        // Add computed properties for backwards compatibility
+        name: data.displayName,
+        specializations: data.specialties,
+        isVerified: data.verificationStatus === 'verified',
+        rating: data.rating || 4.8,
+        profilePicture: data.photoURL
+      } as CounsellorProfile;
+    });
+  } catch (error) {
+    console.error('Error fetching counsellors:', error);
+    throw error;
+  }
+};
+
+// Get a specific counsellor profile by ID
+export const getCounsellorProfile = async (counsellorId: string): Promise<CounsellorProfile> => {
+  try {
+    const userRef = doc(db, 'users', counsellorId);
+    const userSnap = await getDoc(userRef);
+    
+    if (!userSnap.exists()) {
+      throw new Error('Counsellor not found');
+    }
+    
+    const data = userSnap.data();
+    
+    // Ensure it's a counsellor profile
+    if (data.type !== 'counsellor') {
+      throw new Error('User is not a counsellor');
+    }
+    
+    return {
+      ...data,
+      id: userSnap.id,
+      uid: userSnap.id,
+      // Add computed properties for backwards compatibility
+      name: data.displayName,
+      specializations: data.specialties,
+      isVerified: data.verificationStatus === 'verified',
+      rating: data.rating || 4.8,
+      profilePicture: data.photoURL
+    } as CounsellorProfile;
+  } catch (error) {
+    console.error('Error fetching counsellor profile:', error);
+    throw error;
+  }
 };

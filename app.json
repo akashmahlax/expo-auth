@@ -11,13 +11,15 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera for video calls.",
-        "NSMicrophoneUsageDescription": "This app uses the microphone for video calls."
+        "NSCameraUsageDescription": "This app uses the camera for video counseling sessions.",
+        "NSMicrophoneUsageDescription": "This app uses the microphone for video counseling sessions.",
+        "NSPhotoLibraryUsageDescription": "This app accesses photos to share images in chat.",
+        "UIBackgroundModes": ["audio", "voip"]
       }
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -28,7 +30,11 @@
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.ACCESS_NETWORK_STATE",
         "android.permission.CHANGE_NETWORK_STATE",
-        "android.permission.INTERNET"
+        "android.permission.INTERNET",
+        "android.permission.WAKE_LOCK",
+        "android.permission.FOREGROUND_SERVICE",
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_CONNECT"
       ]
     },
     "web": {
@@ -41,22 +47,24 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assestsimages/splash-icon.png",
+          "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {        "android": {
+          "minSdkVersion": 24,
+          "enableProguardInReleaseBuilds": true
+        },
+        "ios": {
+          "deploymentTarget": "15.1"
+        }
+        }
+      ],
       "expo-video"
-    ],
-    "permissions": [
-      "android.permission.CAMERA",
-      "android.permission.RECORD_AUDIO",
-      "android.permission.MODIFY_AUDIO_SETTINGS",
-      "android.permission.ACCESS_NETWORK_STATE",
-      "android.permission.CHANGE_NETWORK_STATE",
-      "android.permission.INTERNET"
     ],
     "experiments": {
       "typedRoutes": true

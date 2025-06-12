@@ -1,4 +1,4 @@
-import { FontAwesome, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { Redirect, Tabs } from 'expo-router';
 import React from 'react';
 import { Platform } from 'react-native';
@@ -42,19 +42,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="messages"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-          href: isUser ? undefined : null,
-        }}
-      />
-      <Tabs.Screen
-        name="counsellor-dashboard"
-        options={{
-          title: 'Dashboard',
-          tabBarIcon: ({ color }) => <FontAwesome5 size={22} name="clipboard-list" color={color} />,
-          href: isCounsellor ? undefined : null,
+          title: 'Messages',
+          tabBarIcon: ({ color }) => <FontAwesome size={24} name="comments" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -65,17 +56,35 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="messages"
+        name="profile"
         options={{
-          title: 'Messages',
-          tabBarIcon: ({ color }) => <FontAwesome size={24} name="comments" color={color} />,
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <FontAwesome size={24} name="user" color={color} />,
+        }}
+      />
+      {/* Hide other tabs */}
+      <Tabs.Screen
+        name="explore"
+        options={{
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="counsellor-dashboard"
+        options={{
+          href: null,
         }}
       />
       <Tabs.Screen
         name="videocall"
         options={{
-          title: 'Video',
-          tabBarIcon: ({ color }) => <FontAwesome size={24} name="video-camera" color={color} />,
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="videocallnew"
+        options={{
+          href: null,
         }}
       />
     </Tabs>

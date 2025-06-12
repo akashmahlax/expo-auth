@@ -1,5 +1,7 @@
 // User and counselor types for the mental wellness app
 
+import { Key } from 'react';
+
 export type UserRole = 'user' | 'counsellor' | 'admin';
 
 export type VerificationStatus = 'pending' | 'verified' | 'rejected';
@@ -14,6 +16,8 @@ export interface UserProfile {
   lastLogin?: Date | string;
   bio?: string;
   phoneNumber?: string;
+  // Backward compatibility alias
+  name?: string; // alias for displayName
 }
 
 export interface CounsellorProfile extends UserProfile {
@@ -34,6 +38,12 @@ export interface CounsellorProfile extends UserProfile {
     }
   };
   certificateURLs?: string[]; // URLs to certificates stored in Firebase Storage
+  profilePicture?: string;
+  rating?: number;
+  isVerified?: boolean;
+  // Backward compatibility aliases
+  name?: string; // alias for displayName
+  specializations?: string[]; // alias for specialties
 }
 
 export interface Certificate {

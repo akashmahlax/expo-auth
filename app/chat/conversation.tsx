@@ -1,15 +1,15 @@
-import { FontAwesome } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
-    ActivityIndicator,
-    FlatList,
-    KeyboardAvoidingView,
-    Platform,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -112,7 +112,7 @@ export default function ConversationScreen() {
             lightColor={isFromMe ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.5)"}
             darkColor={isFromMe ? "rgba(0, 0, 0, 0.7)" : "rgba(255, 255, 255, 0.5)"}
           >
-            {(item.timestamp instanceof Date ? item.timestamp : ('toDate' in item.timestamp ? item.timestamp.toDate() : new Date())).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
           </ThemedText>
         </View>
       </View>

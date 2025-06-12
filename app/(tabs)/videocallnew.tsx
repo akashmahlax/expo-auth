@@ -1,25 +1,25 @@
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome, Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Platform,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
-import SafeVideoCall from '@/components/SafeVideoCall';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import SafeVideoCall from '@/components/SafeVideoCall';
 import { Colors } from '@/constants/Colors';
 import { useAuth } from '@/contexts/AuthContext';
-import { db } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { addCallToSession, updateSessionStatus } from '@/services/sessionService';
 import { Session } from '@/types/user';
 import { doc, getDoc } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
 
 export default function EnhancedVideoCallScreen() {
   const { sessionId } = useLocalSearchParams<{ sessionId?: string }>();
@@ -47,8 +47,8 @@ export default function EnhancedVideoCallScreen() {
         if (sessionDoc.exists()) {
           const sessionData = sessionDoc.data() as Session;
           setSession({
-            ...sessionData,
-            id: sessionDoc.id
+            id: sessionDoc.id,
+            ...sessionData
           });
           
           // If session already has a call ID, use it
@@ -141,11 +141,7 @@ export default function EnhancedVideoCallScreen() {
         
         {session && (
           <ThemedText style={styles.sessionTime}>
-            {session.startTime instanceof Date
-              ? session.startTime.toLocaleDateString()
-              : 'toDate' in session.startTime
-                ? session.startTime.toDate().toLocaleDateString()
-                : 'Invalid Date'}
+            {new Date(session.startTime).toLocaleDateString()}
           </ThemedText>
         )}
       </View>

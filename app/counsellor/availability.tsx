@@ -1,22 +1,30 @@
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Modal,
-    Platform,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  Platform,
+  ScrollView,
+  TouchableOpacity,
+  View,
+  Modal,
+  Text,
 } from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { styled } from 'nativewind';
 
+import { ThemedText } from '@/components/ThemedText';
+import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useAuth } from '@/contexts/AuthContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { DAYS_OF_WEEK, TimeSlot, WeeklyAvailability, addTimeSlot, getCounselorAvailability, removeTimeSlot } from '@/services/availabilityService';
+
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTouchableOpacity = styled(TouchableOpacity);
+const StyledScrollView = styled(ScrollView);
 
 export default function CounselorAvailabilityScreen() {
   const { user, profile, loading: authLoading } = useAuth();
@@ -147,104 +155,104 @@ export default function CounselorAvailabilityScreen() {
 
   if (authLoading || loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-white dark:bg-gray-900">
+      <StyledView className="flex-1 justify-center items-center bg-white dark:bg-gray-900">
         <ActivityIndicator size="large" color={currentColors.tint} />
-        <Text className="mt-5 text-gray-800 dark:text-gray-200">
+        <StyledText className="mt-5 text-gray-800 dark:text-gray-200">
           Loading your availability settings...
-        </Text>
-      </View>
+        </StyledText>
+      </StyledView>
     );
   }
   
   if (!profile || profile.type !== 'counsellor') {
     // Not a counsellor profile
     return (
-      <View className="flex-1 p-4 bg-white dark:bg-gray-900">
-        <Text className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
+      <StyledView className="flex-1 p-4 bg-white dark:bg-gray-900">
+        <StyledText className="text-2xl font-bold mb-6 text-gray-800 dark:text-gray-100">
           Access Denied
-        </Text>
-        <Text className="text-base mb-6 text-gray-600 dark:text-gray-300">
+        </StyledText>
+        <StyledText className="text-base mb-6 text-gray-600 dark:text-gray-300">
           This section is only available to counsellor accounts.
-        </Text>
-        <TouchableOpacity
+        </StyledText>
+        <StyledTouchableOpacity
           className="py-4 px-6 rounded-lg bg-primary-600 items-center"
           onPress={() => router.back()}
         >
-          <Text className="font-bold text-white">
+          <StyledText className="font-bold text-white">
             Go Back
-          </Text>
-        </TouchableOpacity>
-      </View>
+          </StyledText>
+        </StyledTouchableOpacity>
+      </StyledView>
     );
   }
 
   return (
-    <View className="flex-1 bg-white dark:bg-gray-900">
-      <ScrollView className="flex-1">
-        <View className={`flex-row items-center px-4 ${Platform.OS === 'ios' ? 'pt-12' : 'pt-4'} pb-4`}>
-          <TouchableOpacity
+    <StyledView className="flex-1 bg-white dark:bg-gray-900">
+      <StyledScrollView className="flex-1">
+        <StyledView className={`flex-row items-center px-4 ${Platform.OS === 'ios' ? 'pt-12' : 'pt-4'} pb-4`}>
+          <StyledTouchableOpacity
             onPress={() => router.back()}
             className="p-2 mr-2"
           >
             <MaterialIcons name="arrow-back" size={24} color={currentColors.text} />
-          </TouchableOpacity>
-          <Text className="text-2xl font-bold text-gray-800 dark:text-gray-100">
+          </StyledTouchableOpacity>
+          <StyledText className="text-2xl font-bold text-gray-800 dark:text-gray-100">
             Set Your Availability
-          </Text>
-        </View>
+          </StyledText>
+        </StyledView>
         
-        <View className="px-4 pb-4">
-          <Text className="text-base mb-6 text-gray-600 dark:text-gray-300 leading-relaxed">
+        <StyledView className="px-4 pb-4">
+          <StyledText className="text-base mb-6 text-gray-600 dark:text-gray-300 leading-relaxed">
             Set your weekly availability schedule. Clients will only be able to book sessions during these time slots.
-          </Text>
-        </View>
+          </StyledText>
+        </StyledView>
         
-        <View className="px-4 pb-20">
+        <StyledView className="px-4 pb-20">
           {DAYS_OF_WEEK.map((day) => (
-            <View key={day} className="mb-6">
-              <View className="flex-row items-center justify-between mb-3">
-                <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">
+            <StyledView key={day} className="mb-6">
+              <StyledView className="flex-row items-center justify-between mb-3">
+                <StyledText className="text-lg font-bold text-gray-800 dark:text-gray-100">
                   {day.charAt(0).toUpperCase() + day.slice(1)}
-                </Text>
-                <TouchableOpacity
+                </StyledText>
+                <StyledTouchableOpacity
                   className="flex-row items-center py-2 px-4 rounded-lg bg-primary-600"
                   onPress={() => openAddSlotModal(day)}
                 >
                   <MaterialIcons name="add" size={18} color="#FFFFFF" />
-                  <Text className="ml-1 font-bold text-white">
+                  <StyledText className="ml-1 font-bold text-white">
                     Add Slot
-                  </Text>
-                </TouchableOpacity>
-              </View>
+                  </StyledText>
+                </StyledTouchableOpacity>
+              </StyledView>
               
               {availability[day]?.slots?.length > 0 ? (
-                <View>
+                <StyledView>
                   {availability[day].slots.map((slot, index) => (
-                    <View 
+                    <StyledView 
                       key={index} 
                       className="flex-row items-center justify-between py-4 px-4 mb-2 rounded-lg bg-gray-50 dark:bg-gray-800"
                     >
-                      <Text className="text-base text-gray-700 dark:text-gray-200">
+                      <StyledText className="text-base text-gray-700 dark:text-gray-200">
                         {formatTime(slot.start)} - {formatTime(slot.end)}
-                      </Text>
-                      <TouchableOpacity
+                      </StyledText>
+                      <StyledTouchableOpacity
                         onPress={() => handleRemoveTimeSlot(day, index)}
                         className="p-2 rounded-full bg-gray-200 dark:bg-gray-700"
                       >
                         <MaterialIcons name="close" size={18} color={currentColors.text} />
-                      </TouchableOpacity>
-                    </View>
+                      </StyledTouchableOpacity>
+                    </StyledView>
                   ))}
-                </View>
+                </StyledView>
               ) : (
-                <Text className="py-2 text-gray-500 dark:text-gray-400 italic">
+                <StyledText className="py-2 text-gray-500 dark:text-gray-400 italic">
                   No time slots added
-                </Text>
+                </StyledText>
               )}
-            </View>
+            </StyledView>
           ))}
-        </View>
-      </ScrollView>
+        </StyledView>
+      </StyledScrollView>
       
       {/* Time Slot Modal */}
       <Modal
@@ -253,29 +261,29 @@ export default function CounselorAvailabilityScreen() {
         visible={isModalVisible}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View className="flex-1 justify-center items-center bg-black/50">
-          <View className="w-11/12 max-w-md rounded-xl p-6 bg-white dark:bg-gray-800">
-            <Text className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">
+        <StyledView className="flex-1 justify-center items-center bg-black/50">
+          <StyledView className="w-11/12 max-w-md rounded-xl p-6 bg-white dark:bg-gray-800">
+            <StyledText className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">
               Add Time Slot for {selectedDay?.charAt(0).toUpperCase() + selectedDay?.slice(1)}
-            </Text>
+            </StyledText>
             
-            <Text className="text-base mb-4 text-gray-700 dark:text-gray-300">
+            <StyledText className="text-base mb-4 text-gray-700 dark:text-gray-300">
               Specify your available time range:
-            </Text>
+            </StyledText>
             
-            <View className="mb-6">
-              <View className="mb-4">
-                <Text className="text-base mb-2 text-gray-700 dark:text-gray-300">
+            <StyledView className="mb-6">
+              <StyledView className="mb-4">
+                <StyledText className="text-base mb-2 text-gray-700 dark:text-gray-300">
                   Start Time
-                </Text>
-                <TouchableOpacity 
+                </StyledText>
+                <StyledTouchableOpacity 
                   className="py-3 px-4 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
                   onPress={() => setShowStartPicker(true)}
                 >
-                  <Text className="text-base text-gray-800 dark:text-gray-200">
+                  <StyledText className="text-base text-gray-800 dark:text-gray-200">
                     {startTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
-                  </Text>
-                </TouchableOpacity>
+                  </StyledText>
+                </StyledTouchableOpacity>
                 
                 {showStartPicker && (
                   <DateTimePicker
@@ -287,20 +295,20 @@ export default function CounselorAvailabilityScreen() {
                     themeVariant={colorScheme}
                   />
                 )}
-              </View>
+              </StyledView>
               
-              <View className="mb-2">
-                <Text className="text-base mb-2 text-gray-700 dark:text-gray-300">
+              <StyledView className="mb-2">
+                <StyledText className="text-base mb-2 text-gray-700 dark:text-gray-300">
                   End Time
-                </Text>
-                <TouchableOpacity 
+                </StyledText>
+                <StyledTouchableOpacity 
                   className="py-3 px-4 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600"
                   onPress={() => setShowEndPicker(true)}
                 >
-                  <Text className="text-base text-gray-800 dark:text-gray-200">
+                  <StyledText className="text-base text-gray-800 dark:text-gray-200">
                     {endTime.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}
-                  </Text>
-                </TouchableOpacity>
+                  </StyledText>
+                </StyledTouchableOpacity>
                 
                 {showEndPicker && (
                   <DateTimePicker
@@ -313,27 +321,27 @@ export default function CounselorAvailabilityScreen() {
                     minimumDate={startTime}
                   />
                 )}
-              </View>
-            </View>
+              </StyledView>
+            </StyledView>
             
-            <View className="flex-row items-center mb-6">
+            <StyledView className="flex-row items-center mb-6">
               <FontAwesome name="info-circle" size={16} color={currentColors.icon} />
-              <Text className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+              <StyledText className="ml-2 text-sm text-gray-500 dark:text-gray-400">
                 Times are shown in your local time zone
-              </Text>
-            </View>
+              </StyledText>
+            </StyledView>
             
-            <View className="flex-row justify-between">
-              <TouchableOpacity
+            <StyledView className="flex-row justify-between">
+              <StyledTouchableOpacity
                 className="flex-1 mr-2 py-3 rounded-lg border border-gray-300 dark:border-gray-600"
                 onPress={() => setIsModalVisible(false)}
               >
-                <Text className="text-center text-gray-700 dark:text-gray-300 font-medium">
+                <StyledText className="text-center text-gray-700 dark:text-gray-300 font-medium">
                   Cancel
-                </Text>
-              </TouchableOpacity>
+                </StyledText>
+              </StyledTouchableOpacity>
               
-              <TouchableOpacity
+              <StyledTouchableOpacity
                 className="flex-1 ml-2 py-3 rounded-lg bg-primary-600"
                 onPress={handleAddTimeSlot}
                 disabled={saveInProgress}
@@ -341,15 +349,15 @@ export default function CounselorAvailabilityScreen() {
                 {saveInProgress ? (
                   <ActivityIndicator size="small" color="#FFFFFF" />
                 ) : (
-                  <Text className="text-center text-white font-medium">
+                  <StyledText className="text-center text-white font-medium">
                     Save
-                  </Text>
+                  </StyledText>
                 )}
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+              </StyledTouchableOpacity>
+            </StyledView>
+          </StyledView>
+        </StyledView>
       </Modal>
-    </View>
+    </StyledView>
   );
 }

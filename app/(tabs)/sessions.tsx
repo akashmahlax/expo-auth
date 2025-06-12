@@ -2,12 +2,12 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    FlatList,
-    StyleSheet,
-    TouchableOpacity,
-    View,
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
@@ -64,14 +64,12 @@ export default function SessionsScreen() {
     
     if (activeTab === 'upcoming') {
       return sessions.filter(session => 
-        (session.startTime instanceof Date ? session.startTime : 
-         'toDate' in session.startTime ? session.startTime.toDate() : new Date()) > now && 
+        new Date(session.startTime) > now && 
         (session.status === 'scheduled' || session.status === 'in-progress')
       );
     } else {
       return sessions.filter(session => 
-        (session.endTime instanceof Date ? session.endTime : 
-         'toDate' in session.endTime ? session.endTime.toDate() : new Date()) < now || 
+        new Date(session.endTime) < now || 
         session.status === 'completed' || 
         session.status === 'cancelled'
       );
@@ -79,8 +77,8 @@ export default function SessionsScreen() {
   };
   
   const renderSessionItem = ({ item }: { item: Session }) => {
-    const startTime = item.startTime instanceof Date ? item.startTime : 'toDate' in item.startTime ? item.startTime.toDate() : new Date();
-    const endTime = item.endTime instanceof Date ? item.endTime : 'toDate' in item.endTime ? item.endTime.toDate() : new Date();
+    const startTime = new Date(item.startTime);
+    const endTime = new Date(item.endTime);
     const isPast = new Date() > endTime || item.status === 'completed' || item.status === 'cancelled';
     
     let statusColor;
@@ -180,7 +178,7 @@ export default function SessionsScreen() {
             </TouchableOpacity>
           )}
           
-          <Link href={{ pathname: '/(tabs)/chat', params: { sessionId: item.id } }} asChild>
+          <Link href={{ pathname: '/chat', params: { sessionId: item.id } }} asChild>
             <TouchableOpacity
               style={[styles.actionButton, { backgroundColor: '#2196F3' }]}
             >

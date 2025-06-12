@@ -1,18 +1,18 @@
 import { FontAwesome } from '@expo/vector-icons';
 import React, { useCallback, useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Animated,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  Animated,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import {
-    MediaStream,
-    RTCPeerConnection,
-    RTCView
+  MediaStream,
+  RTCPeerConnection,
+  RTCView
 } from 'react-native-webrtc';
 
 // Import NetInfo safely using our mock
@@ -24,12 +24,12 @@ import { Colors } from '@/constants/Colors';
 import { auth } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {
-    createCall,
-    getUserMedia,
-    joinCall as joinCallHelper,
-    switchCamera as switchCameraHelper,
-    toggleAudio as toggleAudioHelper,
-    toggleVideo as toggleVideoHelper
+  createCall,
+  getUserMedia,
+  joinCall as joinCallHelper,
+  switchCamera as switchCameraHelper,
+  toggleAudio as toggleAudioHelper,
+  toggleVideo as toggleVideoHelper
 } from '@/utils/webrtc-helper';
 
 interface VideoCallImplementationProps {
@@ -547,8 +547,8 @@ export default function VideoCallImplementation({
               backgroundColor: 
                 callQuality === 'good' ? '#4CAF50' : 
                 callQuality === 'medium' ? '#FFC107' : '#F44336' 
-            }          ]} />
-          <ThemedText style={styles.qualityText}>
+            }
+          ]} />          <ThemedText style={styles.qualityText}>
             {(callQuality === 'good' ? 'Good' : 
              callQuality === 'medium' ? 'Fair' : 'Poor') + ' Connection'}
           </ThemedText>

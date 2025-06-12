@@ -41,24 +41,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
         }}
       />
-      {isUser && (
-        <Tabs.Screen
-          name="explore"
-          options={{
-            title: 'Explore',
-            tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-          }}
-        />
-      )}
-      {isCounsellor && (
-        <Tabs.Screen
-          name="counsellor-dashboard"
-          options={{
-            title: 'Dashboard',
-            tabBarIcon: ({ color }) => <FontAwesome5 size={22} name="clipboard-list" color={color} />,
-          }}
-        />
-      )}
+      <Tabs.Screen
+        name="explore"
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          href: isUser ? undefined : null,
+        }}
+      />
+      <Tabs.Screen
+        name="counsellor-dashboard"
+        options={{
+          title: 'Dashboard',
+          tabBarIcon: ({ color }) => <FontAwesome5 size={22} name="clipboard-list" color={color} />,
+          href: isCounsellor ? undefined : null,
+        }}
+      />
       <Tabs.Screen
         name="sessions"
         options={{

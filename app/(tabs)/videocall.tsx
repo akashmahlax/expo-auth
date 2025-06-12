@@ -2,20 +2,20 @@ import { FontAwesome } from '@expo/vector-icons';
 import NetInfo from '@react-native-community/netinfo';
 import React, { useEffect, useState } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BackHandler,
-  Platform,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View
+    ActivityIndicator,
+    Alert,
+    Animated,
+    BackHandler,
+    Platform,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    View
 } from 'react-native';
 import {
-  MediaStream,
-  RTCPeerConnection,
-  RTCView
+    MediaStream,
+    RTCPeerConnection,
+    RTCView
 } from 'react-native-webrtc';
 
 import CallHistory from '@/components/CallHistory';
@@ -25,13 +25,13 @@ import { Colors } from '@/constants/Colors';
 import { auth } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import {
-  createCall,
-  getCallHistory,
-  getUserMedia,
-  joinCall as joinCallHelper,
-  switchCamera as switchCameraHelper,
-  toggleAudio as toggleAudioHelper,
-  toggleVideo as toggleVideoHelper
+    createCall,
+    getCallHistory,
+    getUserMedia,
+    joinCall as joinCallHelper,
+    switchCamera as switchCameraHelper,
+    toggleAudio as toggleAudioHelper,
+    toggleVideo as toggleVideoHelper
 } from '@/utils/webrtc-helper';
 
 export default function VideoCallScreen() {
@@ -456,6 +456,7 @@ export default function VideoCallScreen() {
       })
     ]).start();
   };
+
   // Helper function to render the video toggle icon
   const renderVideoToggleIcon = () => {
     if (isVideoEnabled) {
@@ -683,18 +684,14 @@ export default function VideoCallScreen() {
               zOrder={1}
             />
           </View>
-        )}
-        
-        {/* Call Status */}
+        )}        {/* Call Status */}
         {callStatus || !networkStatus ? (
           <View style={styles.statusContainer}>
             <ThemedText style={styles.statusText}>
               {!networkStatus ? 'No network connection' : callStatus}
             </ThemedText>
           </View>
-        ) : null}
-        
-        {/* Network Status */}
+        ) : null}        {/* Network Status */}
         {isCallStarted && (
           <View style={[
             styles.networkIndicator, 
@@ -720,9 +717,23 @@ export default function VideoCallScreen() {
               }
             ]} />
             <ThemedText style={styles.qualityText}>
-              {(callQuality === 'good' ? 'Good' : 
-               callQuality === 'medium' ? 'Fair' : 'Poor') + ' Connection'}
+              {callQuality === 'good' ? 'Good' : 
+               callQuality === 'medium' ? 'Fair' : 'Poor'} Connection
             </ThemedText>
+          </View>
+        )}
+
+        {/* Call Quality Indicator */}
+        {isCallStarted && (
+          <View style={[
+            styles.qualityIndicator, 
+            { backgroundColor: callQuality === 'good' ? '#4CAF50' : callQuality === 'medium' ? '#FF9800' : '#F44336' }
+          ]}>
+            <FontAwesome 
+              name={callQuality === 'good' ? 'check' : 'exclamation-triangle'} 
+              size={14} 
+              color="#FFFFFF" 
+            />
           </View>
         )}
 
@@ -1088,7 +1099,8 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     marginTop: 10,
     fontStyle: 'italic',
-  },  callQualityIcon: {
+  },
+  qualityIndicator: {
     position: 'absolute',
     top: 40,
     right: 20,

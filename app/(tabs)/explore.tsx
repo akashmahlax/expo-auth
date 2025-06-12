@@ -1,38 +1,41 @@
 import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    Alert,
-    Image,
-    Platform,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity,
-    View
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Image,
+  Modal,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useAuth } from '@/contexts/AuthContext';
-import { db } from '@/firebaseConfig';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { createSession } from '@/services/sessionService';
 import { CounsellorProfile } from '@/types/user';
 import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
 
 // Mental health categories for filtering
 const CATEGORIES = [
-  { id: 'all', name: 'All', icon: 'grid-view' as const },
-  { id: 'depression', name: 'Depression', icon: 'cloud' as const },
-  { id: 'anxiety', name: 'Anxiety', icon: 'flash-on' as const },
-  { id: 'stress', name: 'Stress', icon: 'warning' as const },
-  { id: 'relationships', name: 'Relationships', icon: 'people' as const },
-  { id: 'grief', name: 'Grief', icon: 'healing' as const },
-  { id: 'trauma', name: 'Trauma', icon: 'psychology' as const },
-  { id: 'addiction', name: 'Addiction', icon: 'priority-high' as const },
+  { id: 'all', name: 'All', icon: 'apps' },
+  { id: 'depression', name: 'Depression', icon: 'cloud' },
+  { id: 'anxiety', name: 'Anxiety', icon: 'bolt' },
+  { id: 'stress', name: 'Stress', icon: 'warning' },
+  { id: 'relationships', name: 'Relationships', icon: 'people' },
+  { id: 'grief', name: 'Grief', icon: 'healing' },
+  { id: 'trauma', name: 'Trauma', icon: 'psychology' },
+  { id: 'addiction', name: 'Addiction', icon: 'priority-high' },
 ];
 
 export default function ExploreScreen() {

@@ -1,3 +1,4 @@
+import { FontAwesome } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Platform, StyleSheet, View } from 'react-native';
 
@@ -59,11 +60,12 @@ export default function SafeVideoCall({
                 Make sure you've installed the necessary native modules:
               </ThemedText>
               <View style={styles.codeBlock}>
-                <ThemedText style={styles.codeText}>                  npx expo install react-native-webrtc{'\n'}
+                <ThemedText style={styles.codeText}>
+                  npx expo install react-native-webrtc{'\n'}
                   npx expo prebuild{'\n'}
                   npx expo run:android{' '}
                   <ThemedText style={styles.codeComment}>
-                    {/* Comment: */} or run:ios
+                    {/* or run:ios */}
                   </ThemedText>
                 </ThemedText>
               </View>

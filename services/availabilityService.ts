@@ -1,5 +1,5 @@
-import { auth, db } from '@/firebaseConfig';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { auth, db } from '@/firebaseConfig';
 
 // Type definitions for availability
 export interface TimeSlot {

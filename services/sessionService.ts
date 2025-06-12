@@ -108,35 +108,50 @@ export const getUpcomingSessions = async (): Promise<Session[]> => {
   if (!userSnap.exists()) throw new Error('User profile not found');
   
   const userType = userSnap.data()?.type;
-  let sessionsQuery;
-  
   const now = Timestamp.now();
   
+  // First get all sessions for the user
+  let sessionsQuery;
+  
   if (userType === 'counsellor') {
-    // If counsellor, get upcoming sessions where they are the provider
+    // If counsellor, get sessions where they are the provider
     sessionsQuery = query(
       collection(db, 'sessions'),
       where('counsellorId', '==', userId),
-      where('startTime', '>=', now),
-      where('status', '==', 'scheduled'),
       orderBy('startTime')
     );
   } else {
-    // If regular user, get upcoming sessions where they are the client
+    // If regular user, get sessions where they are the client
     sessionsQuery = query(
       collection(db, 'sessions'),
       where('userId', '==', userId),
-      where('startTime', '>=', now),
-      where('status', '==', 'scheduled'),
       orderBy('startTime')
     );
   }
   
   const querySnapshot = await getDocs(sessionsQuery);
-  return querySnapshot.docs.map(doc => ({
-    id: doc.id,
-    ...doc.data(),
-  } as Session));
+  
+  // Filter for upcoming and scheduled sessions on the client side
+  return querySnapshot.docs
+    .map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+    } as Session))
+    .filter(session => {
+      const sessionStartTime = session.startTime as any;
+      const startTimestamp = sessionStartTime?.seconds 
+        ? Timestamp.fromMillis(sessionStartTime.seconds * 1000)
+        : sessionStartTime;
+      
+      return startTimestamp && 
+             startTimestamp.toMillis() >= now.toMillis() && 
+             session.status === 'scheduled';
+    })
+    .sort((a, b) => {
+      const aTime = (a.startTime as any)?.seconds || (a.startTime as Timestamp)?.seconds || 0;
+      const bTime = (b.startTime as any)?.seconds || (b.startTime as Timestamp)?.seconds || 0;
+      return aTime - bTime;
+    });
 };
 
 // Update a session status

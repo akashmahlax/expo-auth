@@ -1,9 +1,9 @@
 import { User } from 'firebase/auth';
-import { doc, onSnapshot, setDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, setDoc, Timestamp } from 'firebase/firestore';
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import { auth, db } from '@/firebaseConfig';
-import { CounsellorProfile, UserProfile } from '@/types/user';
+import { CounsellorProfile, UserProfile, UserRole } from '@/types/user';
 
 interface AuthContextType {
   user: User | null;
